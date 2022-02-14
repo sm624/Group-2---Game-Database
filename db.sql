@@ -1,7 +1,7 @@
 CREATE TABLE GamePictures(
   GameID int,
   Description varchar(255),
-  Path varchar(255)
+  Path varchar(255),
   FOREIGN KEY (GameID) REFERENCES Game(GameID)
 );
 CREATE TABLE Game(
