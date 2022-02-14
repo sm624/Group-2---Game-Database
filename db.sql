@@ -1,9 +1,3 @@
-CREATE TABLE GamePictures(
-  GameID int,
-  Description varchar(255),
-  Path varchar(255),
-  FOREIGN KEY (GameID) REFERENCES Game(GameID)
-);
 CREATE TABLE Game(
   GameID int,
   Name varchar(255),
@@ -21,5 +15,11 @@ CREATE TABLE Creator(
   Description varchar(255),
   Github varchar(255),
   PRIMARY KEY (CreatorID)
+);
+CREATE TABLE GamePictures(
+  GameID int,
+  Description varchar(255),
+  Path varchar(255),
+  FOREIGN KEY (GameID) REFERENCES Game(GameID)
 );
 /*this could have a 4th table but the project needs to be further along to determine this
