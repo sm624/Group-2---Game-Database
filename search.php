@@ -7,6 +7,7 @@
 		<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="repo.css">
 	</head>
 	
 	<body>
@@ -30,9 +31,29 @@
 		<div>
 		<?php
 			include "db_conn.php";
-            
-			$game = mysqli_query($conn, "SELECT * FROM GamePictures"); //this could also be pictures instead of games
-			$numRecords = mysqli_num_rows($game);
+							
+			$terms = isset($_GET['k']) ? $_GET['k'] : '';//uses get to get search terms from url
+				
+			$searchString = "SELECT * FROM Game WHERE ";//string to be sent to db
+									
+			$keywords = explode(' ', $terms);//separates string by spaces, keywords is an array of strings			
+			foreach ($keywords as $word){
+				$searchString .= "tags LIKE '%".$word."%' OR ";
+				$searchString .= "name LIKE '%".$word."%' OR ";
+			}
+			$searchString = substr($searchString, 0, strlen($searchString)-4); //formatting for displaying back
+			//not sure if ill actually use it 
+			$query = mysqli_query($db_conn, $searchString); //the actual query being returned
+				
+			
+		
+			$numRecords = mysqli_num_rows($query);
+			for($i=0;$i<$numRecords; $i++){
+				$row = mysqli_fetch_array($query);
+				echo "<tr>";
+				echo "<td>" . "<a href=" . $row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
+				. "> <img src=" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
+			}
 
 			
 		?>
@@ -43,6 +64,9 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
 
+	<?php
+	include "footer.php";
+	?>
 	</body>
 </html>
 

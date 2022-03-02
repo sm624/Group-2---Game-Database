@@ -7,6 +7,7 @@
 		<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="repo.css">
 	</head>
 	
 	<body>
@@ -26,29 +27,32 @@
 	    </div>
 	  </nav>
 
-	<div class="library">
-		<div>
+
+		<div class="game-grid">
 		<?php
 			include "db_conn.php";
 
-			$game = mysqli_query($conn, "SELECT * FROM GamePictures"); //this could also be pictures instead of games
+			$game = mysqli_query($conn, "SELECT * FROM Game"); //this could also be pictures instead of games
 			$numRecords = mysqli_num_rows($game);
 
-			/*for($i=0;$i<$numRecords; $i++){
+			for($i=0;$i<$numRecords; $i++){
 				$row = mysqli_fetch_array($game);
 				echo "<tr>";
-				echo "<td>" . "<a href=" . $row["Path"] . "download=" . "'" . $row["GameID"] . "'" 
-				. "> <img src=" . $row["Path"] . " class='" . "game" . "'>"."</td>";
-			}*/
+				echo "<td>" . "<a href=" . $row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
+				. "> <img src=" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
+			}
 
 		?>
 		</div>
-	</div>
+	
 	<script src="js/jquery.min.js"></script>
 	<script src="js/popper.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
-
+    
+    <?php
+    include "footer.php";
+    ?>
 	</body>
 </html>
 

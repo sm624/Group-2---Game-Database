@@ -1,7 +1,7 @@
 <?php
     $db_location = "localhost";
-    $username = "GameRepo";
-    $password = "csWebPass!";
+    $username = "repoteam";
+    $password = "repoteam!22";
     $db_name = "GameRepo";
     
     $conn = mysqli_connect($db_location, $username, $password, $db_name);
