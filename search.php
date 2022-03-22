@@ -22,6 +22,11 @@
 	        	<li class="nav-item active"><a href="games.php" class="nav-link">Games</a></li>
 	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
+				<?php
+                if(isset($_SESSION["username"])){
+                    echo '<li class="nav-item active"><a href="admin.php" class="nav-link">Admin</a></li>';
+				}
+				?>
 	        </ul>
 	      </div>
 	    </div>
@@ -32,8 +37,8 @@
 		<?php
 			include "db_conn.php";
 							
-			$terms = isset($_GET['k']) ? $_GET['k'] : '';//uses get to get search terms from url
-				
+			$terms = isset($_GET['search']) ?? '';//uses get to get search terms from url
+			//its a ternary operator, basically saying if GET is set, terms = _GET, else terms = ''
 			$searchString = "SELECT * FROM Game WHERE ";//string to be sent to db
 									
 			$keywords = explode(' ', $terms);//separates string by spaces, keywords is an array of strings			

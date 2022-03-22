@@ -3,11 +3,11 @@
 				<div class="col-md-8 order-md-last">
 					<div class="row">
 						<div class="col-md-6 text-center">
-							<a class="navbar-brand" href="index.php"> <img id="logo-main" src="Edinboro_University_logo.png">
+							<a class="navbar-brand" href="index.php"> <img id="logo-main" src="pictures/Edinboro_University_logo.png">
 								<span>Game Repository</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
-							<form action="search.php" method="get" class="searchform order-lg-last">
+							<form action="search.php" method="get" name="search" class="searchform order-lg-last">
 			          <div class="form-group d-flex">
 			            <input type="text" class="form-control pl-3" placeholder="Search">
 			            <button type="submit" placeholder="" class="form-control search"><span class="fa fa-search"></span></button>
