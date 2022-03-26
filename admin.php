@@ -23,6 +23,8 @@
 	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
                 <?php
+                session_start();
+
                 if(isset($_SESSION["username"])){
                     echo '<li class="nav-item active"><a href="admin.php" class="nav-link">Admin</a></li>';
                 }

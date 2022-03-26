@@ -9,6 +9,7 @@
     width: 400px;
     height: 400px;
     margin-top: 5%;
+    border-radius: 5%;
 }
 .footer-pic{
     height:80px;
@@ -20,6 +21,8 @@ footer{
     margin-left: auto;
     margin-right: auto;
     padding-top: 30px;
+    bottom: 0;
+    width: 100%;
 }
 .login{
     float: right;
@@ -39,11 +42,6 @@ footer{
 .navbar {
     margin-bottom: 0;
     border-radius: 0;
-}
-footer{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
 }
 .sidenav{
     height: 100%; 
@@ -122,4 +120,8 @@ footer{
     text-align: justify;
     margin: auto;
     padding-top: 5px;
+}
+.admin log-in{
+    text-align: center;
+    margin: auto;
 }

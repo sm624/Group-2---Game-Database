@@ -31,10 +31,8 @@
     if(mysqli_num_rows($result) == 1){
         $row = mysqli_fetch_assoc($result);
         if($row["username"] == $username && $row["password"] == $password){
-            echo "Logged In!";
             $_SESSION["username"] = $row["username"];
             header("Location: index.php");
-            exit();
         }
         else{
             header("Location: index.php?error=Incorrect Username or Password 2");

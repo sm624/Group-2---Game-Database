@@ -12,7 +12,7 @@
 	
 	<body>
 		<?php
-		include "nav.php";
+			include "nav.php";
 		?>
         <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav m-auto">
@@ -23,31 +23,30 @@
 	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				<?php
-                if(isset($_SESSION["username"])){
-                    echo '<li class="nav-item active"><a href="admin.php" class="nav-link">Admin</a></li>';
-				}
+					session_start();
+					if(isset($_SESSION["username"])){
+						echo '<li class="nav-item"><a href="admin.php" class="nav-link">Admin</a></li>';
+					}
 				?>
 	        </ul>
 	      </div>
 	    </div>
-	  </nav>
-
-
+	  	</nav>
 		<div class="game-grid">
-		<?php
-			include "db_conn.php";
+			<?php
+				include "db_conn.php";
 
-			$game = mysqli_query($conn, "SELECT * FROM Game"); //this could also be pictures instead of games
-			$numRecords = mysqli_num_rows($game);
+				$game = mysqli_query($conn, "SELECT * FROM Game"); 
+				$numRecords = mysqli_num_rows($game);
 
-			for($i=0;$i<$numRecords; $i++){
-				$row = mysqli_fetch_array($game);
-				echo "<tr>";
-				echo "<td>" . "<a href=" . $row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
-				. "> <img src=" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
-			}
-
-		?>
+				for($i=0;$i<$numRecords; $i++){
+					$row = mysqli_fetch_array($game);
+					echo "<tr>";
+					echo "<td>" . "<img src=" . "pictures/" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
+					"<img src=" . "pictures/" . $row["Image"] . ">"."</td>";
+					//"<a href=" "$row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
+				}
+			?>
 		</div>
 	
 	<script src="js/jquery.min.js"></script>
