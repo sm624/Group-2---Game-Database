@@ -23,11 +23,17 @@
 	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				<?php
-					session_start();
+                    session_start();
 					if(isset($_SESSION["username"])){
-						echo '<li class="nav-item"><a href="admin.php" class="nav-link">Admin</a></li>';
-					}
-				?>
+                        echo '
+                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>
+                        <div class="dropdown-content">
+                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>            
+                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>          
+                        </div>
+                        </div>';
+                    } 
+                ?>
 	        </ul>
 	      </div>
 	    </div>
@@ -41,10 +47,10 @@
 
 				for($i=0;$i<$numRecords; $i++){
 					$row = mysqli_fetch_array($game);
+					$file = str_replace(' ', '', $row["name"]); //this just removes spaces from name
 					echo "<tr>";
+					echo "<td>" . "<a href=" . '"' . $file . '"' . " download>";
 					echo "<td>" . "<img src=" . "pictures/" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
-					"<img src=" . "pictures/" . $row["Image"] . ">"."</td>";
-					//"<a href=" "$row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
 				}
 			?>
 		</div>
@@ -55,7 +61,7 @@
 	<script src="js/main.js"></script>
     
     <?php
-    include "footer.php";
+    	include "footer.php";
     ?>
 	</body>
 </html>

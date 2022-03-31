@@ -57,10 +57,8 @@
 			for($i=0;$i<$numRecords; $i++){
 				$row = mysqli_fetch_array($query);
 				echo "<tr>";
-				echo "<td>" . "<a href=" . $row["pictures"] . "download=" . "'" . $row["gameID"] . "'" 
-				. "> <img src=" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
+				echo "<td>" . "<img src=" . "pictures/" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
 			}
-
 			
 		?>
 		</div>
