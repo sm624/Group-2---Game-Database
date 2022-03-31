@@ -33,35 +33,32 @@
 	    </div>
 	  </nav>
 
-	<div class="library">
-		<div>
+	<div class="game-grid">
 		<?php
 			include "db_conn.php";
-							
-			$terms = isset($_GET['search']) ?? '';//uses get to get search terms from url
-			//its a ternary operator, basically saying if GET is set, terms = _GET, else terms = ''
-			$searchString = "SELECT * FROM Game WHERE ";//string to be sent to db
-									
+			if(isset($_GET['searchGame'])){
+				$terms = $_GET['searchGame'];
+			}			
+			$searchString = "SELECT * FROM Game WHERE ";//string to be sent to db\
 			$keywords = explode(' ', $terms);//separates string by spaces, keywords is an array of strings			
 			foreach ($keywords as $word){
-				$searchString .= "tags LIKE '%".$word."%' OR ";
-				$searchString .= "name LIKE '%".$word."%' OR ";
+				$searchString .= "tags LIKE '%" . $word . "%' OR ";
+				$searchString .= "name LIKE '%" . $word . "%' OR ";
 			}
-			$searchString = substr($searchString, 0, strlen($searchString)-4); //formatting for displaying back
-			//not sure if ill actually use it 
-			$query = mysqli_query($db_conn, $searchString); //the actual query being returned
-				
+			$searchString = substr($searchString, 0, strlen($searchString)-4); //gets rid of last OR
+			$query = mysqli_query($conn, $searchString); //the actual query being returned			
 			
-		
 			$numRecords = mysqli_num_rows($query);
+			
 			for($i=0;$i<$numRecords; $i++){
 				$row = mysqli_fetch_array($query);
+				$file = str_replace(' ', '', $row["name"]); //this just removes spaces from name
 				echo "<tr>";
+				echo "<td>" . "<a href=" . '"' . $file . '"' . " download>";
 				echo "<td>" . "<img src=" . "pictures/" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
 			}
 			
 		?>
-		</div>
 	</div>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/popper.js"></script>
@@ -69,7 +66,7 @@
 	<script src="js/main.js"></script>
 
 	<?php
-	include "footer.php";
+		include "footer.php";
 	?>
 	</body>
 </html>

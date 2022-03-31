@@ -7,9 +7,9 @@
 								<span>Game Repository</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
-					<form action="search.php" method="get" name="search" class="searchform order-lg-last">
+					<form action="search.php" method="get" id="search" name="search" class="searchform order-lg-last">
 			          <div class="form-group d-flex">
-			            <input type="text" class="form-control pl-3" placeholder="Search">
+			            <input type="text" id="searchGame" name="searchGame" class="form-control pl-3" placeholder="Search">
 			            <button type="submit" class="form-control search"><span class="fa fa-search"></span></button>
 			          </div>
 			        </form>

@@ -36,12 +36,12 @@
 		<div class="admin">
 		<h2>New Game</h2>
 
-		<form id="game" name="game" method="post" action="addgame.php" enctype="multipart/form-data">
+		<form id="game" name="game" method="post" action="admin.php" enctype="multipart/form-data">
 		<fieldset>
 		<legend>Enter Game Information</legend>
 			
 		Name:
-		<input type="text" id="name" name="name"><br><br>
+		<input type="text" id="name" name="name" required><br><br>
 		Date:
 		<input type="date" id="date" name="date"><br><br>
 		Description:
@@ -49,17 +49,17 @@
 		Manual:
 		<input type="file" id="manual" name="manual"><br><br>
 		Tag:
-		<select name="tag" id="tag" required>
+		<select name="tag" id="tag">
 		<option value="multiplayer">Multiplayer</option>
 		<option value="action">Action</option>
 		<option value="vr">VR</option>
 		</select>
 		Developer:
 		<select name="developer" id="developer" required>
-		<option value="multiplayer">Ryan</option>
-		<option value="action">Adam</option>
-		<option value="vr">Nate</option>
-		<option value="vr">Maya</option>
+		<option value="Ryan">Ryan</option>
+		<option value="Adam">Adam</option>
+		<option value="Nate">Nate</option>
+		<option value="Maya">Maya</option>
 		</select>
 		<br><br>
 		<legend>Game Pictures and Videos</legend><br/>
@@ -75,15 +75,16 @@
 		</form>
 		<?php
 		include "db_conn.php";
-		$target_dir =  '/html';//fix later
-		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-		$name = basename($_FILES["fileToUpload"]["name"]);
-		echo $name . "<br>";
-		echo "<br>" . $target_file."<br>";
-		echo "<br>" . $_FILES["fileToUpload"]["name"] . "<br>";
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-		if(isset($_POST["submit"])) {
+		if(isset($_POST["submit"])){
+			$target_dir =  '/html' + "/";//fix later
+			$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+			$name = basename($_FILES["fileToUpload"]["name"]);
+			//echo $name . "<br>";
+			//echo "<br>" . $target_file."<br>";
+			//echo "<br>" . $_FILES["fileToUpload"]["name"] . "<br>";
+			$uploadOk = 1;
+			$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+			
 			$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 			if($check !== false) {
 				echo "File is an image - " . $check["mime"] . ".";
@@ -92,51 +93,53 @@
 				echo "File is not an image.";
 				$uploadOk = 0;
 			}
-		}
-		if (file_exists($target_file)) {
-			echo "Sorry, file already exists.";
-			$uploadOk = 0;
-		}
-		if ($_FILES["fileToUpload"]["size"] > 500000000) {
-			echo "Sorry, your file is too large.";
-			$uploadOk = 0;
-		}
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-			echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-			$uploadOk = 0;
-		}
-		if($uploadOk == 0) {
-			echo "Sorry, your file was not uploaded.";
-		} else {
-			if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-				echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.";
-			}else{
-				echo $target_file."<br>";
-				echo $_FILES["fileToUpload"]["tmp_name"];
-				echo "Sorry, there was an error uploading your file.";
+			
+			if (file_exists($target_file)) {
+				echo "Sorry, file already exists.";
+				$uploadOk = 0;
+			}
+			if ($_FILES["fileToUpload"]["size"] > 500000000) {
+				echo "Sorry, your file is too large.";
+				$uploadOk = 0;
+			}
+			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+				echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+				$uploadOk = 0;
+			}
+			if($uploadOk == 0) {
+				echo "Sorry, your file was not uploaded.";
+			} else {
+				if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+					echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.";
+				}else{
+					echo $target_file."<br>";
+					echo $_FILES["fileToUpload"]["tmp_name"] . "<br>";
+					echo "Sorry, there was an error uploading your file." . "<br>";
+				}
+			}
+
+			$games = mysqli_query($conn, "SELECT * FROM Game ORDER BY Name ASC") or die(mysql_error());
+			$numRecords = mysqli_num_rows($games);
+
+			$sql = "INSERT INTO `Game`(`gameID`, `name`, `pictures`, `videos`, `tags`, `decription`, `manual`, `date`, `developers`, `upVotes`)"
+			. " VALUES(" . 
+			$numRecords . ", '" . //game ID
+			$_POST['name'] . "', '" . //game name
+			$target_file . "', '" . //picture
+			$_POST['videoToUpload'] . "', '" . //videos
+			$_POST['tag'] . "', '" . //tags
+			$_POST['description'] . "', '" . //description
+			$_POST['manual'] . "', '" . //manual
+			$_POST['date'] . "', '" . //date
+			$_POST['developer'] . "'," . //developers
+			" 0" . //upVotes
+			")";
+
+			echo $sql;
+			if ($_POST['name'] != "" ){
+				mysqli_query($conn, $sql) or die(mysql_error());
 			}
 		}
-
-		$sql = "INSERT INTO `Game`(`gameID`, `name`, `pictures`, `videos`, `tags`, `decription`, `manual`, `date`, `developers`, `upVotes`)"
-		. "VALUES ('', '" . //game ID
-		$_POST['name'] . "', " . //game name
-		$_POST['picture'] . "''" . //picture
-		", '". //videos
-		"', '". //tags
-		"', '". //description
-		"', '". //manual
-		"', '". //requirements
-		"', '', '". //download
-		"', '". //date
-		"', '". //developers
-		"', '". //upVotes
-		"')";
-
-		echo $sql;
-		if ($_POST['name'] != "" ){
-			mysqli_query($conn, $sql) or die(mysql_error());
-		}
-
 
 		$games = mysqli_query($conn, "SELECT * FROM Game ORDER BY Name ASC") or die(mysql_error());
 		$numRecords = mysqli_num_rows($games);
