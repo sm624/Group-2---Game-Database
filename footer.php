@@ -1,6 +1,6 @@
 <footer class="page-footer font-small unique-color-dark pt-4">
   <a href="https://www.edinboro.edu/" target="_blank"><div class="footer-copyright text-center py-3">© 2022 Copyright:
-    <img src="pictures/Edinboro_University_logo.png" class="footer-pic"></a>
+    <img src="pictures/Edinboro_University_logo.png" class="footer-pic" alt="Edinboro University Logo"></a>
   </div>
   <div class="admin log-in">
     <?php

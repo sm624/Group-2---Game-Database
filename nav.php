@@ -3,7 +3,7 @@
 				<div class="col-md-8 order-md-last">
 					<div class="row">
 						<div class="col-md-6 text-center">
-							<a class="navbar-brand" href="https://www.edinboro.edu/" target="_blank"> <img id="logo-main" src="pictures/Edinboro_University_logo.png">
+							<a class="navbar-brand" href="https://www.edinboro.edu/" target="_blank"> <img id="logo-main" src="pictures/Edinboro_University_logo.png" alt="Edinboro University Logo">
 								<span>Game Repository</span></a>
 						</div>
 						<div class="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">

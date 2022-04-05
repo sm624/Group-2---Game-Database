@@ -52,12 +52,14 @@
 			
 			for($i=0;$i<$numRecords; $i++){
 				$row = mysqli_fetch_array($query);
-				$file = str_replace(' ', '', $row["name"]); //this just removes spaces from name
 				echo "<tr>";
-				echo "<td>" . "<a href=" . '"' . $file . '"' . " download>";
-				echo "<td>" . "<img src=" . "pictures/" . $row["pictures"] . " class='" . "game" . "'>"."</td>";
+				echo '<form action="download.php" method="GET" name="downloadGame">
+				<a href="http://games.cs.edinboro.edu/download.php?downloadGame=' . $row["name"] . '" onclick="document.someForm.submit();">';
+				echo "<td>" . "<img src=" . "pictures/" . $row["picture"] . " class='" . "game" . 
+				"' alt='" . $row["name"] . "'" . ">" . "</td>";
+				echo "<div class=" . "'game-title'" . ">" . $row["name"] . "</div>";
+				echo '</a></form>';
 			}
-			
 		?>
 	</div>
 	<script src="js/jquery.min.js"></script>
