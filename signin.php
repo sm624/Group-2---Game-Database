@@ -9,18 +9,26 @@
 		<link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="repo.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	</head>
+        <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcpGYofAAAAACzb5TQEMG2m1TwNSp1EDlJyC4gV"></script>
+        <script>
+        function onSubmit(token) {
+            document.getElementById("form-signin").submit();
+        }
+        </script>
+
+
+    </head>
     <body class="body-sign-in">
         <header>
         <img id="logo-main" src="pictures/Edinboro_University_logo.png">
         </header> 
-            <form class="form-signin" method="post" action="login.php">
+            <form name="form-signin" id="form-signin" class="form-signin" method="post" action="login.php">
                 <h2>Please sign in</h2><br>
                 <label class="sr-only" for="username"></label>
                 <input class="form-control" type="username" name="username" id="username" placeholder="Username"> 
                 <label class="sr-only" for="password"></label>
                 <input class="form-control" type="password" name="password" id="password" placeholder="Password"><br>
-                <button type="submit" class="btn btn-lg sign-in btn-block">Log In</button><br>
+                <button data-sitekey="6LcpGYofAAAAACzb5TQEMG2m1TwNSp1EDlJyC4gV" data-callback='onSubmit' type="submit" class="g-recaptcha btn btn-lg sign-in btn-block">Log In</button><br>
             </form>
         <footer>
         <div class="footer-copyright text-center py-3">© 2022 Copyright:

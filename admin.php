@@ -1,3 +1,7 @@
+<?php 
+    session_start();
+    if(isset($_SESSION["username"])){
+?>
 <!doctype html>
 <html lang="en">
   	<head>
@@ -10,29 +14,25 @@
 		<link rel="stylesheet" href="repo.css">
 	</head>
 	
-	<body>
-		<?php
-			include "nav.php";
+	<?php
+		include "nav.php";
 		?>
-		<div class="collapse navbar-collapse" id="ftco-nav">
+        <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav m-auto">
 	        	<li class="nav-item"><a href="index.php" class="nav-link">Home</a></li>
-	        	<li class="nav-item dropdown">
-            </li>
+	        	<li class="nav-item dropdown"></li>
 	        	<li class="nav-item"><a href="games.php" class="nav-link">Games</a></li>
-	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
-                <?php
-					session_start();
-
-					if(isset($_SESSION["username"])){
-						echo '<li class="nav-item active"><a href="admin.php" class="nav-link">Admin</a></li>';
-					}
-                ?>
-            </ul>
+	        	<?php
+                if(isset($_SESSION["username"])){
+                    echo '<li class="nav-item active"><a href="admin.php" class="nav-link">Admin</a></li>';
+				}
+				?>
+			</ul>
 	      </div>
 	    </div>
 	  	</nav>
+	  
 		<div class="admin">
 		<h2>New Game</h2>
 
@@ -46,23 +46,33 @@
 		<input type="date" id="date" name="date"><br><br>
 		Description:
 		<input type="text" id="description" name="description"><br><br>
-		Manual:
-		<input type="file" id="manual" name="manual"><br><br>
-		Tag:
-		<select name="tag" id="tag">
-		<option value="multiplayer">Multiplayer</option>
-		<option value="action">Action</option>
-		<option value="vr">VR</option>
-		</select>
+		Tags:<br>
+		<?php
+			include "db_conn.php";
+			$games = mysqli_query($conn, "SELECT * FROM Game ORDER BY Name ASC") or die(mysql_error());//for later use
+			$numRecords = mysqli_num_rows($games);//for later use
+			$tags = mysqli_query($conn, "SELECT * FROM GameTags"); 
+			$tagRecords = mysqli_num_rows($tags);
+			for($i=0;$i<$tagRecords; $i++){
+				$tag = mysqli_fetch_array($tags);
+				echo '<input type="checkbox" id="tag" name="tags[]" value="' . $tag["tag"] .'">';
+				echo '<label for="' . $tag["tag"] .'">' . '&nbsp' . $tag["tag"] .'</label><br>';
+			}
+		?>
 		Developer:
-		<select name="developer" id="developer" required>
-		<option value="Ryan">Ryan</option>
-		<option value="Adam">Adam</option>
-		<option value="Nate">Nate</option>
-		<option value="Maya">Maya</option>
+		<select name="devs" id="devs" required>
+		<?php
+			$developers = mysqli_query($conn, "SELECT * FROM Developer"); 
+			$numRows = mysqli_num_rows($developers);
+			for($i=0;$i<$numRows; $i++){
+				$dev = mysqli_fetch_array($developers);
+				echo '<option value="'. $dev["firstName"] . '">' . $dev["firstName"] . '</option>';
+			}
+		?>
 		</select>
+		
 		<br><br>
-		<legend>Game Pictures and Videos</legend><br/>
+		<legend>Game Picture and Video</legend><br/>
 		Picture:
 		<input type="file" name="fileToUpload" id="fileToUpload">
 		<br><br>
@@ -76,94 +86,151 @@
 		<?php
 		include "db_conn.php";
 		if(isset($_POST["submit"])){
-			$target_dir =  '/html' + "/";//fix later
+			$target_dir =  '/pictures/';
 			$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 			$name = basename($_FILES["fileToUpload"]["name"]);
-			//echo $name . "<br>";
-			//echo "<br>" . $target_file."<br>";
-			//echo "<br>" . $_FILES["fileToUpload"]["name"] . "<br>";
 			$uploadOk = 1;
 			$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 			
 			$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 			if($check !== false) {
-				echo "File is an image - " . $check["mime"] . ".";
+				echo "File is an image - " . $check["mime"] . ".<br>";
 				$uploadOk = 1;
 			} else {
-				echo "File is not an image.";
+				echo "File is not an image.<br>";
 				$uploadOk = 0;
 			}
 			
 			if (file_exists($target_file)) {
-				echo "Sorry, file already exists.";
+				echo "Sorry, picture already exists.<br>";
 				$uploadOk = 0;
 			}
 			if ($_FILES["fileToUpload"]["size"] > 500000000) {
-				echo "Sorry, your file is too large.";
-				$uploadOk = 0;
-			}
-			if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
-				echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+				echo "Sorry, your picture is too large.<br>";
 				$uploadOk = 0;
 			}
 			if($uploadOk == 0) {
-				echo "Sorry, your file was not uploaded.";
+				echo "Your picture was not uploaded.<br>";
 			} else {
 				if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-					echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.";
+					echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.<br>";
+					$picUpload = true;
 				}else{
 					echo $target_file."<br>";
 					echo $_FILES["fileToUpload"]["tmp_name"] . "<br>";
-					echo "Sorry, there was an error uploading your file." . "<br>";
+					echo "Sorry, there was an error uploading your picture." . "<br>";
 				}
 			}
+		
+			$target_video = $target_dir . basename($_FILES["videoToUpload"]["name"]);
+			$name = basename($_FILES["videoToUpload"]["name"]);
+			$uploadOk = 1;
+			$videoFileType = pathinfo($target_video,PATHINFO_EXTENSION);
+			
+			if (file_exists($target_video)) {
+				echo "Sorry, video already exists.<br>";
+				$uploadOk = 0;
+			}
+			if ($_FILES["videoToUpload"]["size"] > 500000000) {
+				echo "Sorry, your video is too large.<br>";
+				$uploadOk = 0;
+			}
+			if($videoFileType !== "mp4") {
+				echo "Sorry, only mp4 files are allowed.<br>";
+				$uploadOk = 0;
+			}
+			if($uploadOk == 0) {
+				echo "Your video was not uploaded.<br>";
+			} else {
+				if(move_uploaded_file($_FILES["videoToUpload"]["tmp_name"], $target_video) && $picUpload === true) {
+					//sql to upload game + picture + video
+					echo "The video ". basename($_FILES["videoToUpload"]["name"]). " has been uploaded.<br>";
+					$pic=basename($_FILES["fileToUpload"]["name"]);
+					$vid=basename($_FILES["videoToUpload"]["name"]);
+					$sql = "INSERT INTO `Game`(`gameID`, `name`, `picture`, `video`, `decription`, `date`, `developer`)"
+					. " VALUES(" . 
+					$numRecords . ", '" . //game ID
+					$_POST['name'] . "', '" . //game name
+					$pic . "', '" . //picture
+					$vid . "', '" . //video
+					$_POST['description'] . "', '" . //description
+					$_POST['date'] . "', '" . //date
+					$_POST['developer'] . "'," . //developer
+					")";
+					echo $sql;
+					mysqli_query($conn, $sql) or die(mysql_error());
 
-			$games = mysqli_query($conn, "SELECT * FROM Game ORDER BY Name ASC") or die(mysql_error());
-			$numRecords = mysqli_num_rows($games);
+					//sql to add tags to game
+					$postTags = $_POST["tags"];
+					$count = count($postTags);
+					if(!empty($postTags)){//if enduser selected tags
+						for($i=0; $i<$count; $i++){//for each tag selected
+							$tag = $tags[$i];
+							$sql = "INSERT INTO `Tag`(`gameID`, `tag`) VALUES ('". $numRecords ."','" . $tag . "')";//INSERT Tag GameID into Tag table
+							mysqli_query($conn, $sql) or die(mysql_error());
+							echo "<br>" . $sql;
+						}
+					}
 
-			$sql = "INSERT INTO `Game`(`gameID`, `name`, `pictures`, `videos`, `tags`, `decription`, `manual`, `date`, `developers`, `upVotes`)"
-			. " VALUES(" . 
-			$numRecords . ", '" . //game ID
-			$_POST['name'] . "', '" . //game name
-			$target_file . "', '" . //picture
-			$_POST['videoToUpload'] . "', '" . //videos
-			$_POST['tag'] . "', '" . //tags
-			$_POST['description'] . "', '" . //description
-			$_POST['manual'] . "', '" . //manual
-			$_POST['date'] . "', '" . //date
-			$_POST['developer'] . "'," . //developers
-			" 0" . //upVotes
-			")";
+					//sql to add developer to developer table
+					
+					//INSERT DevID, GameID, firstName, lastName 
+					//$sql = "INSERT INTO `Developer`(`developerID`, `firstName`, `lastName`, `bio`) VALUES ('" . $numRows . "','[value-2]','[value-3]','[value-4]')";
 
-			echo $sql;
-			if ($_POST['name'] != "" ){
-				mysqli_query($conn, $sql) or die(mysql_error());
+				}else{
+					print_r($_FILES);
+					echo $target_video."<br>";
+					echo $_FILES["videoToUpload"]["tmp_name"] . "<br>";
+					echo "Sorry, there was an error uploading your video." . "<br>";
+				}
 			}
 		}
-
-		$games = mysqli_query($conn, "SELECT * FROM Game ORDER BY Name ASC") or die(mysql_error());
-		$numRecords = mysqli_num_rows($games);
-
+		echo "<br><br>";
 		echo "<table>";
 		echo "<tr>
 		<th>Name</th>
 		<th>Tags</th>
-		<th>Up Votes</th>
 		<th>Size</th>
 		</tr>";
 		for ($i = 0; $i < $numRecords; $i++){
 			$row = mysqli_fetch_array($games);
 			echo "<tr>";
-			echo "<td width='15%'>".$row["name"]."</td>";
-			echo "<td width='10%'>".$row["tags"]."</td>";
-			echo "<td width='10%'>".$row["upVotes"]."</td>";
-			echo "<td width='10%'>".filesize($row["name"] + ".zip")."</td>";
+			echo "<td width='15%'>".$row["name"] . "</td>";
+			echo "<td width='10%'>";
+			$sql = 'SELECT * FROM Tags WHERE gameID = "' . $row["gameID"] . '"';
+			
+			/*$tags = mysqli_query($conn, $sql) or die(mysql_error()); 
+			$tagRecords = mysqli_num_rows($tags);
+			echo $tagRecords;
+			for($i=0;$i<$tagRecords; $i++){
+				$tag = mysqli_fetch_array($tags);
+				if($i != $tagRecords-1){
+					$gameTags = $gameTags . $tag . ', ';
+				}else{
+					$gameTags = $gameTags . $tag;
+				}
+			}
+			echo $gameTags;*/
+			echo "</td>";
+			$file = str_replace(' ', '', $row["name"]);
+			$file = $file . ".zip";
+			$path = "Games/";
+			$path = realpath($path);
+			//is this O(n^2)? yes, yes it is. do i have time to find a better way? no, no i dont.
+			foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+				if($object->getFileName()==$file){
+					$bytes = $object->getSize();
+					break;
+				}
+			}			
+			$bytes /= pow(1024, 2);
+			$bytes = round($bytes, 2);
+			echo "<td width='10%'>". $bytes . " MB</td>";
+			echo '<td width="10%"><a href="http://games.cs.edinboro.edu/edit.php?editGame=' . $row["gameID"] . '"<button type="button" class="btn btn-lg sign-in btn-block">Update</button></a>';
 			echo "</tr>";
 		}
 		echo "</table>";
-
 		?>
-		</div>
 				
 		<script src="js/jquery.min.js"></script>
 		<script src="js/popper.js"></script>
@@ -174,6 +241,11 @@
 			include "footer.php";
 		?>
 	</body>
-		
 </html>
-
+<?php
+}
+else{
+    header("Location: index.php?erro=You do not have access to this page");
+    exit();
+}
+?>

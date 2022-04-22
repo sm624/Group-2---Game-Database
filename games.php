@@ -20,18 +20,11 @@
 	        	<li class="nav-item dropdown">
             </li>
 	        	<li class="nav-item active"><a href="games.php" class="nav-link">Games</a></li>
-	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				<?php
                     session_start();
 					if(isset($_SESSION["username"])){
-                        echo '
-                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>
-                        <div class="dropdown-content">
-                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>            
-                        <li class="nav-item dropdown"><a href="admin.php" class="nav-link">Admin</a></li>          
-                        </div>
-                        </div>';
+                        echo '<li class="nav-item"><a href="admin.php" class="nav-link">Admin</a></li>';
                     } 
                 ?>
 	        </ul>
@@ -47,13 +40,10 @@
 
 				for($i=0;$i<$numRecords; $i++){
 					$row = mysqli_fetch_array($games);
-					echo "<tr>";
-					echo '<form action="download.php" method="GET" name="downloadGame">
-					<a href="http://games.cs.edinboro.edu/download.php?downloadGame=' . $row["name"] . '" onclick="document.someForm.submit();">';
-					echo "<td>" . "<img src=" . "pictures/" . $row["picture"] . " class='" . "game" . 
-					"' alt='" . $row["name"] . "'" . ">" . "</td>";
-					echo "<div class=" . "'game-title'" . ">" . $row["name"] . "</div>";
-					echo '</a></form>';
+					echo "<div class=game>";
+					echo '<a href="http://games.cs.edinboro.edu/download.php?downloadGame=' . $row["name"] . '">';
+					echo "<img src='" . "pictures/" . $row["picture"] . "' alt='" . $row["name"] . "' class='" . "game-grid-item'>";
+					echo "<div class=" . "'game-title'" . ">" . $row["name"] . "</div></div>";
 				}
 			?>
 		</div>

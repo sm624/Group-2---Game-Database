@@ -19,7 +19,6 @@
 	        	<li class="nav-item dropdown">
             </li>
 	        	<li class="nav-item active"><a href="games.php" class="nav-link">Games</a></li>
-	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				<?php
 				session_start();
@@ -48,21 +47,18 @@
 				?>
 			</div>
             <div class="downloadPage">
-                <div class="rightPage">
                     <div class="gameVideo">
 						<?php
-							echo '<video autoplay>
-							<source src=' . '"' . $game['video'] . '"' .  'type="video/mp4">
+							echo '<video width="100%" height="100%" autoplay controls class="video">
+							<source src=' . '"pictures/' . $game['video'] . '"' .  'type="video/mp4">
 						  	Your browser does not support the video tag.
 						  	</video>';
 						?>
                     </div>    
                     <div class="gameSlide">
-                        /*Slide Reel?*/
                     </div>
-                </div>
                 <div class="leftPage">
-                    <div class="gamePicture">
+                    <div class="topRight">
 						<?php	
 							echo '<img src="pictures/'. $game['picture'] .'" class="gamePicture">';
 						?>
@@ -73,9 +69,6 @@
 						?>
                     </div>
                     <div class="gameCorner">
-                        <div class="gameUpvotes">
-							Upvotes: <?php echo $game['upVotes'];?>
-						</div>
 						<div class="gameTags">
 							Tags: 
 						</div>
@@ -89,7 +82,7 @@
 							<?php
 							$file = str_replace(' ', '', $game["name"]); //this just removes spaces from name
 							$file = $file . ".zip";
-							echo "<a href=" . '"' . $file . '"' . " download>";	
+							echo "<a href=" . '"Games/' . $file . '"' . " download>";	
 							?>
 							<button type="button" class="btn btn-outline-danger">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">

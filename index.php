@@ -20,7 +20,6 @@
 	        	<li class="nav-item dropdown">
             </li>
 	        	<li class="nav-item"><a href="games.php" class="nav-link">Games</a></li>
-	        	<li class="nav-item"><a href="creators.php" class="nav-link">Creators</a></li>
 	            <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				<?php
 				session_start();
@@ -33,75 +32,29 @@
 	      </div>
 	    </div>
 	  	</nav>
-		  <?php
+		  	<?php
 				include "db_conn.php";
 				
-				$randomId = rand(0,13);
-				$query = "SELECT * FROM Game WHERE gameID=" . $randomId;
+				$path = "Games/";
+				$bytestotal = 0;
+				$path = realpath($path);
+				if($path!==false && $path!='' && file_exists($path)){
+					foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object){
+						$bytestotal += $object->getSize();
+					}
+				}				
+				$bytestotal /= pow(1024, 3);
+				$bytestotal = round($bytestotal, 2);
+				$query = "SELECT * FROM Game";
 				$games = mysqli_query($conn, $query);
-				$game = mysqli_fetch_array($games);
+				$numrows = mysqli_num_rows($games);
 		  	?>
-			<div class="gameTitle">
-				<?php
-					echo $game['name'];
-				?>
+			<h4 class="introTitle">Welcome to the Edinboro University Game Repository!</h4>
+			
+			<div class="introParagraph">
+				This website stores the games developed by Edinboro students. We currently have <?php echo $numrows;?> games stored, which adds up to <?php echo $bytestotal;?> gigabytes of storage.
 			</div>
-            <div class="downloadPage">
-                <div class="rightPage">
-                    <div class="gameVideo">
-						<?php
-							echo '<video autoplay>
-							<source src=' . '"' . $game['video'] . '"' .  'type="video/mp4">
-						  	Your browser does not support the video tag.
-						  	</video>';
-						?>
-                    </div>    
-                    <div class="gameSlide">
-                        /*Slide Reel?*/
-                    </div>
-                </div>
-                <div class="leftPage">
-                    <div class="gamePicture">
-						<?php	
-							echo '<img src="pictures/'. $game['picture'] .'" class="gamePicture">';
-						?>
-                    </div>
-                    <div class="gameDescription">
-						<?php
-                        	echo $game['description'];
-						?>
-                    </div>
-                    <div class="gameCorner">
-                        <div class="gameUpvotes">
-							Upvotes: <?php echo $game['upVotes'];?>
-						</div>
-						<div class="gameTags">
-							Tags: 
-						</div>
-						<div class="gameDev">
-							Developer:
-						</div>
-						<div class="gameDate">
-							Released: <?php echo $game['date'];?>
-						</div>
-						<div class="downloadButton">
-							<?php
-							$file = str_replace(' ', '', $game["name"]); //this just removes spaces from name
-							$file = $file . ".zip";
-							echo "<a href=" . '"' . $file . '"' . " download>";	
-							?>
-							<button type="button" class="btn btn-outline-danger">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-									<path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
-									<path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"></path>
-								</svg>
-									Download</a>
-							</button>
-							
-						</div>
-                    </div>
-                </div>
-            </div>
+
 	
 		<script src="js/jquery.min.js"></script>
 		<script src="js/popper.js"></script>
