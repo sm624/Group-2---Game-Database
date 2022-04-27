@@ -189,7 +189,26 @@ footer{
     margin: auto;
     padding:5px;
     text-align: center;
+    margin-top: 1%;
 }
 .introParagraph{
     text-align: center;
+}
+table{
+    margin: auto;
+    width: 98%;
+    font-size: large;
+    background-color: lightgrey;
+    border: 1px solid gray;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+th{
+    border: 1px solid gray;
+    font-size: larger;
+    background-color: gray;
+    color: black;
+}
+td{
+    border: 1px solid gray;
 }

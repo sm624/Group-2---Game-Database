@@ -45,7 +45,7 @@
 		Date:
 		<input type="date" id="date" name="date"><br><br>
 		Description:
-		<input type="text" id="description" name="description"><br><br>
+		<input type="text" id="description" name="description"><br>
 		Tags:<br>
 		<?php
 			include "db_conn.php";
@@ -60,14 +60,14 @@
 			}
 		?>
 		Developer:
-		<select name="devs" id="devs" required>
+		<input type="text" name="devs" id="devs" required>
 		<?php
-			$developers = mysqli_query($conn, "SELECT * FROM Developer"); 
+			/*$developers = mysqli_query($conn, "SELECT * FROM Developer"); 
 			$numRows = mysqli_num_rows($developers);
 			for($i=0;$i<$numRows; $i++){
 				$dev = mysqli_fetch_array($developers);
 				echo '<option value="'. $dev["firstName"] . '">' . $dev["firstName"] . '</option>';
-			}
+			}*/
 		?>
 		</select>
 		
@@ -147,7 +147,7 @@
 					echo "The video ". basename($_FILES["videoToUpload"]["name"]). " has been uploaded.<br>";
 					$pic=basename($_FILES["fileToUpload"]["name"]);
 					$vid=basename($_FILES["videoToUpload"]["name"]);
-					$sql = "INSERT INTO `Game`(`gameID`, `name`, `picture`, `video`, `decription`, `date`, `developer`)"
+					$sql = "INSERT INTO `Game`(`gameID`, `name`, `picture`, `video`, `description`, `date`, `developer`)"
 					. " VALUES(" . 
 					$numRecords . ", '" . //game ID
 					$_POST['name'] . "', '" . //game name
@@ -230,8 +230,33 @@
 			echo "</tr>";
 		}
 		echo "</table>";
+		
+		$sql = "SELECT * FROM Comments";
+		$comments = mysqli_query($conn, $sql);
+		$numRecords = mysqli_num_rows($comments);
+		echo "<br><br>";
+		echo "<table>";
+		echo "<tr>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>E-Mail</th>
+		<th>Subject</th>
+		<th>Comments</th>
+		</tr>";
+		for ($i = 0; $i < $numRecords; $i++){
+			$row = mysqli_fetch_array($comments);
+			echo "<tr>";
+			echo "<td width='10%'>".$row["firstName"] . "</td>";
+			echo "<td width='10%'>".$row["lastName"] . "</td>";
+			echo "<td width='10%'>".$row["email"] . "</td>";
+			echo "<td width='10%'>".$row["subject"] . "</td>";
+			echo "<td width='30%'>".$row["comments"] . "</td>";
+			echo "<td width='10%'>". '<button type="button" class="btn btn-danger btn-lg btn-block">Delete</button></a>'. "</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
 		?>
-				
+
 		<script src="js/jquery.min.js"></script>
 		<script src="js/popper.js"></script>
 		<script src="js/bootstrap.min.js"></script>
